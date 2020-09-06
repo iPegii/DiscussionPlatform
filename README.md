@@ -1,7 +1,8 @@
 # Harjoitustyö
 
 Taulut
-* Käyttäjät(id,nimi,oikeudet)
-* Yleinen keskustelu(id,viesti,aika,käyttäjä,hashtagit)
-* Huoneet(id, huoneen nimi,tarvittavat oikeudet)
-* Huoneen_käyttäjät(id,huone,käyttäjä)
+* Käyttäjät(id,nimi, käyttäjätunnus, salasana, oikeudet)
+* Viesti(id,teksti,aika,käyttäjä,tykkäykset)
+* Huoneet(id, huoneen nimi, huoneen id, salasana)
+* Huoneen_viestit(id, huoneen id, viesti)
+* Huoneen_käyttäjät(id,huone id, käyttäjä id)
