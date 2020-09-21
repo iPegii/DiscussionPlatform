@@ -1,5 +1,9 @@
 # Keskustelualusta
 
+Sovellus on löydettävissä [Herokusta](https://tsoha-discussionplatform.herokuapp.com/)  
+  
+Tällä hetkellä sovelluksessa toimii vain kirjautuminen ja uloskirjautuminen. Sekä toimimaton näkymä viestien lähettämisestä.
+
 
 ## Osiot
 
