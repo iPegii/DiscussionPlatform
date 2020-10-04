@@ -1,17 +1,16 @@
 <title> Discussion Platform</title>
 <h1>Discussion platform</h1>
-{% if session.username %}
-<p>Logged in as {{session.username}}</p>
+{% if session.user[1] %}
+<p>Logged in as {{session.user[1]}}</p>
 <form action="/logout" method="POST">
 <input type="submit" name="Submit" value="Logout">
 </form>
-<form action="/frontpage" method="POST">
+<form action="/sendmessage" method="POST">
 <input name="message" type="text" id="message"> <br>
 <input type="submit" name="Submit" value="Send">
 </form>
-
-{% for m in messages %}
-{{m[1]}}    {m[2]} <br>
-{{m[3]}}
+{% for m in messages_list %}
+{{m[0]}}    {{m[1]}} <br>
+{{m[2].strftime("%d/%m/%Y, %H:%M:%S")}} <br>
 {% endfor %}
 {% endif%}
