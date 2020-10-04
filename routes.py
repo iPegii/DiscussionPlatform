@@ -43,8 +43,10 @@ def page1():
             register = account_manager.register(username, name, password)
             if register == 'Username is taken':
                 flash('Username has been taken', 'info')
+                return ('', 204)
             elif register == 'Register was succesful!':
                 flash('Register was succesful!')
+                return ('', 204)
         else:
             print('No idea.')
     elif request.method == "GET":

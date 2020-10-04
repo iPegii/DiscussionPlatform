@@ -8,7 +8,7 @@ CREATE TABLE messages(
     id SERIAL PRIMARY KEY,
     message TEXT NOT NULL,
     created_at TIMESTAMP,
-    user_id INTEGER REFERENCES users,
+    user_id INTEGER REFERENCES users
 );
 CREATE TABLE rooms(
     id SERIAL PRIMARY KEY, 

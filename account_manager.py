@@ -23,10 +23,6 @@ def login(username, password):
             return('Username or password is not correct')
 
 def register(username, name, password):
-    if username < 1:
-        return("Username is too short")
-    if password < 8:
-        return("Password is too short")
     usernameFound = db.check_username(username)
     if usernameFound == 1:
         return('Username is taken')
