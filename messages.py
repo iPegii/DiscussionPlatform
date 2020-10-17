@@ -6,7 +6,6 @@ from os import getenv
 app.secret_key = getenv("SECRET_KEY")
 
 def send_message(user, message):
-    print(user)
     if len(message) < 1:
         print('too short')
         return 'too short'

@@ -1,0 +1,16 @@
+@media all and (min-width: 992px) {
+	.navbar .nav-item .dropdown-menu{ display: none; }
+	.navbar .nav-item:hover .dropdown-menu{ display: block; }
+	.navbar .nav-item .dropdown-menu{ margin-top:0; }
+}
+
+@media all and (max-width: 992px) {
+	.navbar .user-box{display: none !important;}
+}
+
+
+.layout{background-color: #6c757d; height: 100%;}
+.layout .message-box .message{background-color: aqua;}
+.layout .message-box{width: 50%; margin-left: 15%;border-top: 20%;}
+.layout .send-message-box {width: 50%; position: relative;}
+.layout .send-message-box .form-group{width: 200%;}

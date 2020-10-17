@@ -14,7 +14,6 @@ def login(username, password):
     else:
         userPassword = db.get_password(username)
         if check_password_hash(userPassword, password):
-            print(usernameFound)
             user = [usernameFound[0], usernameFound[1]]
             session["user"] = user
             print('Logged in')

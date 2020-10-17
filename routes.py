@@ -22,9 +22,6 @@ def page1():
         name = request.form["name"]
         username = request.form["username"]
         password = request.form["password"]
-        print(username)
-        print(name)
-        print(password)
         if len(username) < 1:
             flash("Username is too short")
             return ('', 204)
@@ -36,7 +33,7 @@ def page1():
               #     print('Logged in ')
               #      session["username"] = username
                     flash('Logged in')
-                    return render_template("account.html")
+                    return redirect("/")
             else:
                 flash('Username or password not correct', 'info')
         elif request.form['Submit'] == 'Register':
@@ -51,7 +48,7 @@ def page1():
             print('No idea.')
     elif request.method == "GET":
         if session.get("user") != None:
-            return render_template("account.html")
+            return redirect("/")
     return render_template("login.html")
 
 @app.route("/account", methods=["POST", "GET"])

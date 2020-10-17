@@ -16,7 +16,6 @@ def check_username(username):
         sql = "SELECT id, username FROM users WHERE username=:username"
         userResult = db.session.execute(sql, {"username":username})
         user = userResult.fetchall()[0]
-        print(user)
         return user
     else:
         return usernameFound
