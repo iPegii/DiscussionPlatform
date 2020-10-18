@@ -1,11 +1,24 @@
-@media all and (min-width: 992px) {
+@media all and (min-width: 583px) {
 	.navbar .nav-item .dropdown-menu{ display: none; }
 	.navbar .nav-item:hover .dropdown-menu{ display: block; }
 	.navbar .nav-item .dropdown-menu{ margin-top:0; }
+	nav .form-inline{margin-right: 3em !important}
+	nav .user-box{display: flex !important}
 }
 
-@media all and (max-width: 992px) {
-	.navbar .user-box{display: none !important;}
+@media all and (max-width: 582px) {
+	.navbar .nav-item .dropdown-menu{ display: none; }
+	.navbar .nav-item:hover .dropdown-menu{ display: block; }
+	.navbar .nav-item .dropdown-menu{ margin-top:0; }
+	nav .user-box{display: none !important}
+	.navbar .nvbar-toggler{margin-right: 2em !important}
+	nav .form-inline{margin-right: 0em !important;}
+}
+
+@media all and (min-width: 1px) {
+	.navbar .nav-item .dropdown-menu{ display: none; }
+	.navbar .nav-item:hover .dropdown-menu{ display: block; }
+	.navbar .nav-item .dropdown-menu{ margin-top:0; }
 }
 
 body{background-color: #6c757d;}
@@ -13,5 +26,10 @@ body{background-color: #6c757d;}
 .layout .message-box .message{ width: 90%; color: black; font-size: medium; margin-top: 0.5em;}
 .layout .message-box{width: 50%; margin-left: 15%;border-top: 30%; max-height: 10em;}
 .layout .message-box .message-list{overflow-y: scroll; max-height: 25em; top: 5em;background-color: gainsboro;}
-.layout .send-message-box {width: 50%; position: relative;}
+.layout .send-message-box {width: 40%; position: relative;}
 .layout .send-message-box .form-group{width: 200%;padding-top: 1em;}
+
+nav .form-inline{margin-right: 3em;}
+
+.joinLayout{position: relative;}
+.joinLayout .joinForm{ position: absolute; top: 50%;left: 50%;transform: translate(-60%, 100%)}

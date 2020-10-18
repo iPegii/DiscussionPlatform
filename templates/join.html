@@ -53,24 +53,15 @@
 <!-- Alkuperäinen: message,username,created_at  -->
 <!-- Uusi: id, room_name, message, created_at, name-->
 {% block content %}
-<div class="layout">
-<div class="message-spacer"> <h1> {{room[1]}} </h1></div>
-<div class="message-box">
-  <div class="message-list">
-    {% for m in message_list %}
-    <div class="message" style="word-wrap: break-word;">
-      {{m[3].strftime("%d/%m/%Y, %H:%M:%S")}} send by {{m[4]}} <br>
-      {{m[2]}} <br>
-    </div>
-    {% endfor %}
+<div class="joinLayout">
+
+<form class="joinForm">
+  <div class="form-group">
+    <h1><label for="roomName">{{room_name}}</label></h1>
+    <input type="password" class="form-control" id="roomName" placeholder="Password">
   </div>
-    <form class="send-message-box" action="/sendmessage" method="POST">
-      <div class="form-group">
-        <textarea class="form-control" id="exampleFormControlTextarea1" name="message" rows="3"></textarea>
-        <input type="hidden" name="room" value="{{room[0]}}">
-        <input type="submit" name="Submit" value="Send">
-      </div>
-  </form>
-</div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
 </div>
 {% endblock %}

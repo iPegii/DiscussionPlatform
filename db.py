@@ -31,24 +31,19 @@ def create_user(username, name, passwordHash):
 
     ## Creating user
     try:
-        sql = "INSERT INTO users (name, username, password) VALUES (:name, :username, :password)"
-        db.session.execute(sql, {"name":name,"username":username,"password":passwordHash})
+        sql = "INSERT INTO users (name, username, password) VALUES (:name, :username, :password) RETURNING id"
+        result = db.session.execute(sql, {"name":name,"username":username,"password":passwordHash})
+        user_id = result.fetchone()[0]
         db.session.commit()
     except IntegrityError:
         db.session.rollback()
         return "Error: creating user"
 
     ## Adding user to public room
-    try:
-        sql = "SELECT id FROM users WHERE username=:username"
-        idResult = db.session.execute(sql, {"username":username}).fetchone()[0]
-    except IntegrityError:
-        db.session.rollback()
-        return "Error: finding new user id"
 
     try:
-        sql = "INSERT INTO (room_id, user_id, rights) VALUES (1, :user_id, 1)"
-        db.session.execute(sql, {"user_id":idResult})
+        sql = "INSERT INTO rooms_users (room_id, user_id, rights) VALUES (1, :user_id, 1)"
+        db.session.execute(sql, {"user_id":user_id})
         db.session.commit()
     except IntegrityError:
         db.session.rollback()
@@ -57,20 +52,31 @@ def create_user(username, name, passwordHash):
 
 
 
-def add_message(user_id, message):
+def add_message(user_id, message, room_id):
+    ## add message
     try: 
-        sql = "INSERT INTO messages (message, user_id, created_at) VALUES (:message, :user_id, NOW())"
-        db.session.execute(sql, {"user_id":user_id, "message":message})
+        sql = "INSERT INTO messages (message, user_id, created_at) VALUES (:message, :user_id, NOW()) RETURNING id"
+        result = db.session.execute(sql, {"user_id":user_id, "message":message})
+        message_id = result.fetchone()[0]
         db.session.commit()
     except IntegrityError:
         db.session.rollback()
         return "Error: adding user"
 
-def get_messages(user_id, room_id):
+    ## connect message with room_messages
+    try: 
+        sql = "INSERT INTO room_messages (room_id, message_id) VALUES (:r_id, :m_id)"
+        db.session.execute(sql, {"r_id":room_id, "m_id":message_id})
+        db.session.commit()
+    except IntegrityError:
+        db.session.rollback()
+        return "Error: adding user"
+
+def get_messages(room_id):
     try:
         sql = ("SELECT M.id, R.room_name, M.message, M.created_at, U.name FROM messages M, users U, rooms R, rooms_users RU, room_messages RM" + 
-        " WHERE U.id=:user_id AND U.id = RU.user_id AND RU.room_id = RM.room_id AND RM.message_id = M.id AND RM.room_id=:room_id")
-        result = db.session.execute(sql, {"user_id":user_id, "room_id":room_id})
+        " WHERE U.id = RU.user_id AND RU.room_id = RM.room_id AND RM.message_id = M.id AND RM.room_id=:room_id")
+        result = db.session.execute(sql, {"room_id":room_id})
         messages = result.fetchall()
         return messages
     except IntegrityError:
@@ -86,3 +92,13 @@ def get_rooms():
     except IntegrityError:
         db.session.rollback()
         return "Error: fetching rooms"
+
+def get_user_rooms(user_id):
+    try:
+        sql = "SELECT R.id, R.room_name FROM rooms R, rooms_users RU WHERE RU.room_id = R.id AND RU.user_id=:user_id"
+        result = db.session.execute(sql, {"user_id":user_id})
+        rooms = result.fetchall()
+        return rooms
+    except IntegrityError:
+        db.session.rollback()
+        return "Error: fetching user rooms"

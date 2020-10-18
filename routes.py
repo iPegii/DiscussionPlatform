@@ -13,17 +13,13 @@ def index():
     user = session.get("user")
     if user != None:
         if(len(user) <= 3):
-            print(user)
-            session["user"] = [user[0], user[1], 1]
-            user = session.get("user")
-        user_id = user[0]
-        room_id = user[2]
-        message_list = messages.get_messages(user_id, room_id)
+            session["user"] = [user[0], user[1]]
+        room_id = 1
+        message_list = messages.get_messages(room_id)
         room_list = rooms.get_rooms()
-        room = room_list[0][1]
-        print(message_list)
-        print(room_list)
-        return render_template("account.html", message_list=message_list, room_list=room_list, room=room)
+        room = room_list[room_id - 1]
+        user_room_list = rooms.get_user_rooms(user[0])
+        return render_template("account.html", message_list=message_list, room_list=room_list, room=room, user_room_list=user_room_list)
     else:
         return render_template("login.html")
 
@@ -68,26 +64,28 @@ def account():
         return render_template("account.html")
     else:
         return redirect("/login")
- #   if request.method == "POST":
- #       message = request.form["message"]
- #       username = request.form["username"]
- #       sql = "INSERT INTO messages (message, username, time) VALUES (:message, :username, NOW())"
- #       db.session.execute(sql, {"message":name,"username":username})
- #       db.session.commit()
- #       result = db.session.execute("SELECT message, username, time FROM messages")
- #       messages = result.fetchall()
- #,messages=messages
 
 @app.route("/sendmessage", methods=["POST"])
 def send_message():
     user = session.get("user")
     message = request.form["message"]
-    messages.send_message(user, message)
+    room_id = request.form["room"]
+    messages.send_message(user, message, room_id)
     return redirect("/")
 
-@app.route("/changeroom", methods=["POST"])
-def change_room():
-    room = request.form["room"]
-    user = session.get("user")
-    session["user"] = [user[0], user[1], room]
-    return redirect("/")
+@app.route("/rooms/<int:id>", methods=["GET"])
+def change_room(id):
+    user_id = session.get("user")[0]
+    message_list = messages.get_messages(id)
+    room_list = rooms.get_rooms()
+    user_room_list = rooms.get_user_rooms(user_id)
+    return render_template("account.html", message_list=message_list, room_list=room_list, room=id, user_room_list=user_room_list)
+
+@app.route("/joinroom", methods=["GET"])
+def join_room():
+    room_id = 1
+    room_name = "Amazing group"
+    room_list = rooms.get_rooms()
+    user_id = session.get("user")[0]
+    user_room_list = rooms.get_user_rooms(user_id)
+    return render_template("join.html", room_name=room_name, room_id=room_id, room_list=room_list, user_room_list=user_room_list)
