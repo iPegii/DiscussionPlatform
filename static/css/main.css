@@ -8,9 +8,10 @@
 	.navbar .user-box{display: none !important;}
 }
 
-
-.layout{background-color: #6c757d; height: 100%;}
-.layout .message-box .message{background-color: aqua;}
-.layout .message-box{width: 50%; margin-left: 15%;border-top: 20%;}
+body{background-color: #6c757d;}
+.layout .message-spacer{padding-top: 1.5em;margin-left: 15%; color: rgb(32, 32, 32);}
+.layout .message-box .message{ width: 90%; color: black; font-size: medium; margin-top: 0.5em;}
+.layout .message-box{width: 50%; margin-left: 15%;border-top: 30%; max-height: 10em;}
+.layout .message-box .message-list{overflow-y: scroll; max-height: 25em; top: 5em;background-color: gainsboro;}
 .layout .send-message-box {width: 50%; position: relative;}
-.layout .send-message-box .form-group{width: 200%;}
+.layout .send-message-box .form-group{width: 200%;padding-top: 1em;}

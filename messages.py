@@ -1,10 +1,6 @@
 from app import app
 import db
 
-from flask import session, redirect, session
-from os import getenv
-app.secret_key = getenv("SECRET_KEY")
-
 def send_message(user, message):
     if len(message) < 1:
         print('too short')
@@ -14,5 +10,5 @@ def send_message(user, message):
         return 'no user'
     db.add_message(user[0], message)
 
-def get_messages():
-    return db.get_messages()
+def get_messages(user_id, room_id):
+    return db.get_messages(user_id, room_id)

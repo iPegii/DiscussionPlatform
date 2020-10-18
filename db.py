@@ -2,6 +2,7 @@ from app import app
 from flask_sqlalchemy import SQLAlchemy
 from os import getenv
 import datetime
+from sqlalchemy.exc import IntegrityError
 
 app.config["SQLALCHEMY_DATABASE_URI"] = getenv("DATABASE_URL")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
@@ -27,16 +28,61 @@ def get_password(username):
     return userPassword
 
 def create_user(username, name, passwordHash):
-    sql = "INSERT INTO users (name, username, password) VALUES (:name, :username, :password)"
-    db.session.execute(sql, {"name":name,"username":username,"password":passwordHash})
-    db.session.commit()
+
+    ## Creating user
+    try:
+        sql = "INSERT INTO users (name, username, password) VALUES (:name, :username, :password)"
+        db.session.execute(sql, {"name":name,"username":username,"password":passwordHash})
+        db.session.commit()
+    except IntegrityError:
+        db.session.rollback()
+        return "Error: creating user"
+
+    ## Adding user to public room
+    try:
+        sql = "SELECT id FROM users WHERE username=:username"
+        idResult = db.session.execute(sql, {"username":username}).fetchone()[0]
+    except IntegrityError:
+        db.session.rollback()
+        return "Error: finding new user id"
+
+    try:
+        sql = "INSERT INTO (room_id, user_id, rights) VALUES (1, :user_id, 1)"
+        db.session.execute(sql, {"user_id":idResult})
+        db.session.commit()
+    except IntegrityError:
+        db.session.rollback()
+        return "Error: adding user to public room"
+
+
+
 
 def add_message(user_id, message):
-    sql = "INSERT INTO messages (message, user_id, created_at) VALUES (:message, :user_id, NOW())"
-    db.session.execute(sql, {"user_id":user_id, "message":message})
-    db.session.commit()
+    try: 
+        sql = "INSERT INTO messages (message, user_id, created_at) VALUES (:message, :user_id, NOW())"
+        db.session.execute(sql, {"user_id":user_id, "message":message})
+        db.session.commit()
+    except IntegrityError:
+        db.session.rollback()
+        return "Error: adding user"
 
-def get_messages():
-    result = db.session.execute("SELECT message, username, created_at FROM messages, users WHERE messages.user_id=users.id")
-    messages = result.fetchall()
-    return messages
+def get_messages(user_id, room_id):
+    try:
+        sql = ("SELECT M.id, R.room_name, M.message, M.created_at, U.name FROM messages M, users U, rooms R, rooms_users RU, room_messages RM" + 
+        " WHERE U.id=:user_id AND U.id = RU.user_id AND RU.room_id = RM.room_id AND RM.message_id = M.id AND RM.room_id=:room_id")
+        result = db.session.execute(sql, {"user_id":user_id, "room_id":room_id})
+        messages = result.fetchall()
+        return messages
+    except IntegrityError:
+        return "Error: fetching messages"
+
+
+def get_rooms():
+    try:
+        sql = "SELECT id, room_name FROM rooms"
+        result = db.session.execute(sql)
+        rooms = result.fetchall()
+        return rooms
+    except IntegrityError:
+        db.session.rollback()
+        return "Error: fetching rooms"

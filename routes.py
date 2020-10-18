@@ -4,15 +4,26 @@ import account_manager
 from flask import render_template, redirect, request, session, flash
 from os import getenv
 import messages
+import rooms
 app.secret_key = getenv("SECRET_KEY")
 
 
 @app.route("/")
 def index():
-    print(session.get("user"))
-    message_list = messages.get_messages()
-    if session.get("user") != None:
-        return render_template("account.html", messages_list=message_list)
+    user = session.get("user")
+    if user != None:
+        if(len(user) <= 3):
+            print(user)
+            session["user"] = [user[0], user[1], 1]
+            user = session.get("user")
+        user_id = user[0]
+        room_id = user[2]
+        message_list = messages.get_messages(user_id, room_id)
+        room_list = rooms.get_rooms()
+        room = room_list[0][1]
+        print(message_list)
+        print(room_list)
+        return render_template("account.html", message_list=message_list, room_list=room_list, room=room)
     else:
         return render_template("login.html")
 
@@ -72,4 +83,11 @@ def send_message():
     user = session.get("user")
     message = request.form["message"]
     messages.send_message(user, message)
+    return redirect("/")
+
+@app.route("/changeroom", methods=["POST"])
+def change_room():
+    room = request.form["room"]
+    user = session.get("user")
+    session["user"] = [user[0], user[1], room]
     return redirect("/")
