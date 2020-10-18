@@ -59,8 +59,8 @@
   <div class="message-list">
     {% for m in message_list %}
     <div class="message" style="word-wrap: break-word;">
-      {{m[3].strftime("%d/%m/%Y, %H:%M:%S")}} send by {{m[4]}} <br>
-      {{m[2]}} <br>
+      {{m[1].strftime("%d/%m/%Y, %H:%M:%S")}} send by {{m[2]}} <br>
+      {{m[0]}} <br>
     </div>
     {% endfor %}
   </div>

@@ -74,10 +74,11 @@ def add_message(user_id, message, room_id):
 
 def get_messages(room_id):
     try:
-        sql = ("SELECT M.id, R.room_name, M.message, M.created_at, U.name FROM messages M, users U, rooms R, rooms_users RU, room_messages RM" + 
-        " WHERE U.id = RU.user_id AND RU.room_id = RM.room_id AND RM.message_id = M.id AND RM.room_id=:room_id")
+        sql = ("SELECT M.message, M.created_at, U.name FROM messages M, users U, rooms_users RU ,room_messages RM" + 
+        " WHERE RM.room_id=:room_id AND RM.message_id = M.id AND RU.room_id=:room_id AND RU.user_id = U.id AND U.id = M.user_id")
         result = db.session.execute(sql, {"room_id":room_id})
         messages = result.fetchall()
+        print("db:", messages)
         return messages
     except IntegrityError:
         return "Error: fetching messages"
